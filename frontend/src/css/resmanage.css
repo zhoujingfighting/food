@@ -1,0 +1,12 @@
+.welcome{
+    position: relative;
+    height:3rem;
+    background:#5de16b;
+}
+h2{
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform:translateX(-50%) translateY(-50%);
+    color:white;
+}

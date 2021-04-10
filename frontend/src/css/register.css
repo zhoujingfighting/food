@@ -1,0 +1,29 @@
+.register{
+    width:80%;
+    height:300px;
+    border:1px solid violet;
+    position: absolute;
+    border-radius: 20px;
+    top:20%;
+    left:10%;
+}
+.title{
+    margin-top:1rem;
+}
+h1{
+    width:200px;
+    margin:16px auto;
+}
+.flex{
+    padding:0 2rem;
+    margin-top:1rem;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+}
+.button{
+    width:10rem;
+    position: relative;
+    top:1rem;
+    left:25%;
+}
