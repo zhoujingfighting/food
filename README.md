@@ -80,9 +80,16 @@ deskId ,restaurantId
 
 桌面信息:
 
-​	桌面名称,容纳人数,id,restaurant
+​桌面名称,容纳人数,id,restaurant
+- 遇到的问题
+  - fetcher 和 suspense问题
+  - 路由匹配问题:id
+  - useeffect作用
+  - 使用usememo缓存结果
+```javascript
 
-
+```
+### 前端页面的设计
 
 
 

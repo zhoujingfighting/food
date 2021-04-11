@@ -26,30 +26,32 @@ export default withRouter(function Register(props){
     }
     return (
         <div className='register'>
-            <div className='title'>
-                <h1>餐厅管理员注册</h1>
+            <div className='reg-bg'></div>
+            <div className='register-title'>
+                <h1
+                className='reg-h1'
+                >餐厅管理员注册</h1>
             </div>
             <form onSubmit={register}>
-                <div className='flex'>
+                <div className='register-flex'>
                     <span>用户名:</span>
                     <input type = 'text' ref={nameref} placeholder='请输入用户名'/>
                 </div> 
-                <div className='flex'>
+                <div className='register-flex'>
                     <span >邮&nbsp;&nbsp;&nbsp;箱:</span>
                     <input type = 'email' ref={emailref} />
                 </div> 
-                <div className='flex'>
+                <div className='register-flex'>
                     <span >密&nbsp;&nbsp;&nbsp;码:</span>
                     <input type = 'password' ref={passwordref}/>
                 </div>
-                <div className='flex'>
+                <div className='register-flex'>
                     <span>餐厅名:</span>
                     <input type = 'text' ref={titleref} placeholder='请输入餐厅名称'/>
                 </div>
-                <div className='button'>
+                <div className='register-button'>
                     <button>点击此处注册您的餐厅</button>
                 </div>
-                
             </form>
         </div>
     )

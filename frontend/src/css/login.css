@@ -8,18 +8,17 @@
 .login{
     width:80%;
     height:200px; 
-    border:1px solid red;
     position: absolute;
     border-radius: 20px;
     top:50%;
     left:50%;
-    background: lightpink;
+    background:violet;
     transform: translateX(-50%) translateY(-50%);
 }
 .title{
     margin-top:1rem;
 }
-h1{
+.log-h1{
     width:200px;
     margin:16px auto;
 }
@@ -33,9 +32,10 @@ h1{
 .button{
     position:relative;
 }
-button{
+.log-button{
     display: block;
     position: absolute;
+    top:0.8rem;
     left:50%;
     transform: translateX(-50%);
 }

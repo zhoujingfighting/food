@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import api from './api'
+import { Link } from 'react-router-dom'
 /*
     菜品管理页面应该是:左侧是选择品区,右侧是选择的菜区
 */
-function FoodItem( {food} ){
+function FoodItem( {food ,onDelete} ){
     var [foodInfo,setFoodInfo] = useState(food)
     var [isMOdify,setIsModify] = useState(false)
     var [foodProps,setFoodProps] = useState({
@@ -30,16 +31,41 @@ function FoodItem( {food} ){
         [e.target.name] : e.target.value
         })
     }
+    function deletFood(){
+         api.delete(`/restaurant/${food.rid}/food/`+ food.id).then( () => {
+             onDelete(food.id)
+            //  api.get(`/restaurant/food`).then(res =>{
+            //     setFoods(res.data)
+            // })
+         })
+            
+    }
+    function setOffline(){
+        api.put(`/restaurant/${food.rid}/food/`+ food.id ,{
+            ...foodProps,
+            status:'on'
+        }).then( (res)=>{
+            setFoodInfo(res.data)
+        })
+    }
+    function setOnline(){
+        api.put(`/restaurant/${food.rid}/food/`+ food.id ,{
+            ...foodProps,
+            status:'off'
+        }).then(res =>{
+            setFoodInfo(res.data)
+        })
+    }
     return (
         <div style={{width:'100%',height:'250px',border:'1px solid red'}}>
-            <h3>{food.name}</h3>
+            <h3>{foodInfo.name}</h3>
             {
                 !isMOdify?
             <div>
-                <img src={food.img} alt={food.name}></img>
-                <p>顾客评价:{food.desc}</p>
-                <p>价格:{food.price}</p>
-                <p>分类:{food.category?food.category:'暂未分类'}</p>
+                <img src={foodInfo.img} alt={foodInfo.name}></img>
+                <p>顾客评价:{foodInfo.desc}</p>
+                <p>价格:{foodInfo.price}</p>
+                <p>分类:{foodInfo.category?foodInfo.category:'暂未分类'}</p>
             </div>:
             <div>
                 名称:<input type='text' onChange={change} defaultValue={foodInfo.name} name='name'></input>
@@ -51,11 +77,11 @@ function FoodItem( {food} ){
             <div>
                 <button onClick={()=>{setIsModify(true)}}>修改</button>
                 <button onClick={save}>保存</button>
-                {food.status === 'on' && 
-                <button>上架</button>}
-                {food.status === 'off' && 
-                <button>下架</button>}
-                <button>删除</button>
+                {foodInfo.status === 'on' && 
+                <button onClick={ setOnline }>下架</button>}
+                {foodInfo.status === 'off' && 
+                <button onClick={ setOffline }>上架</button>}
+                <button onClick={deletFood}>删除</button>
             </div>
         </div>
     )
@@ -69,15 +95,24 @@ export default function FoodManage(){
     },[])
     console.log( foods )
     //拿到所有食物列表 ,
+    function onDelete(id){
+        console.log(1)
+        setFoods(foods.filter(item => !(item.id === id)))
+    }
     return (
         <div> 
-            {
+            <Link to='/manage/add-food'>添加菜品</Link>
+            {/* 总添加菜品标签 */}
+            <div>
+                {
                 foods.map(food => {
                     return (
-                        <FoodItem key={food.id} food={food}/>
+                        <FoodItem key={food.id} food={food} onDelete = {onDelete}/>
                     )
                 })
-            }
+                }
+            </div>
+            
         </div>
     )
 }

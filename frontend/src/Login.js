@@ -24,7 +24,7 @@ export default withRouter(function Login(props){
         </div>
         <div className='login'>
             <div className='title'> 
-                <h1>餐厅管理员登录</h1>
+                <h1 className='log-h1'>餐厅管理员登录</h1>
             </div>
             <div className='form'>
                 <form onSubmit={login}>
@@ -37,7 +37,7 @@ export default withRouter(function Login(props){
                         <input type = 'password' ref={passwordref} />
                     </div>
                     <div className='button'>
-                        <button>点击此处登录</button>
+                        <button className='log-button'>点击此处登录</button>
                     </div>
                 </form>
             </div>
