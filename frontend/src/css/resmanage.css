@@ -1,0 +1,20 @@
+.welcome{
+    width: 100%;
+    position: relative;
+    height:3rem;
+    background:#5de16b;
+}
+.res-h2{
+    width:100%;
+    position: absolute;
+    top:50%;
+    left:80%;
+    transform:translateX(-50%) translateY(-50%);
+}
+.res-span{
+    color:white;
+}
+.res-nav{
+    position: relative ;
+    left:1rem
+}

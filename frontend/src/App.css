@@ -1,0 +1,77 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+html{ font-size: 100%;}
+body {
+    font-size: 1.5rem;
+}
+/* ipad pro */
+@media screen and (max-width: 1024px) {
+    body {
+      font-size: 1.4rem;
+    }
+}
+/* ipad */
+@media screen and (max-width: 768px) {
+    body {
+      font-size: 1.3rem;
+    }
+}
+/* iphone6 7 8 plus */
+@media screen and (max-width: 414px) {
+    body {
+      font-size: 1.25rem;
+    }
+}
+/* iphoneX */
+@media screen and (max-width: 375px) and (-webkit-device-pixel-ratio: 3) {
+    body {
+      font-size: 1.125rem;
+    }
+}
+/* iphone6 7 8 */
+@media screen and (max-width: 375px) and (-webkit-device-pixel-ratio: 2) {
+    body {
+      font-size: 1rem;
+    }
+}
+/* iphone5 */
+@media screen and (max-width: 320px) {
+    body {
+      font-size: 0.75rem;
+    }
+}
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

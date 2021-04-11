@@ -13,7 +13,7 @@ app.use((req,res,next) => {
     //next用法
 })
 app.use(cors({
-    allow:true,
+    origin:true ,
     maxAge:86400,
     credentials:true
     //这三个字段是为了实现跨域

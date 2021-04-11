@@ -1,0 +1,44 @@
+ .home-bg{
+     width: 100vw;
+     height:100vh;
+     background: url('../imgs/iu.jpg');
+     opacity: 0.2;
+     position: absolute;
+ }
+ .home-title{
+     color : violet;
+     position: absolute;
+     width:70%;
+     left:50%;
+     top:35%;
+     transform: translateX(-50%);
+     text-align: center;
+ }
+ .homepage-login{
+    position: absolute;
+    width:8rem;
+    height:8rem;
+    line-height: 8rem;
+    font-size: 3rem;
+    top:50%;
+    left:10%;
+    background: violet;
+    text-align: center;
+    border-radius: 20%;
+ }
+ .homepage-register{
+    position: absolute;
+    width:8rem;
+    height:8rem;
+    line-height: 8rem;
+    font-size: 3rem;
+    top:50%;
+    left:60%;
+    background: violet;
+    text-align: center;
+    border-radius: 20%;
+ }
+ .reg-span
+ .log-span{
+     color: violet;
+ }
