@@ -70,7 +70,7 @@ app.route('/login')
         tryLogin.name ,tryLogin.password)
         if(user){
             res.cookie('userid',user.id)//不使用签名
-            res.json({code:0 ,msg:'登陆成功'})
+            res.json({code:0 ,msg:'登陆成功',id:user.id})
         }else{
             res.status(403).json({
                 code:-1,

@@ -1,0 +1,11 @@
+.order-itemwrap{
+    position: relative;
+    width:100vw;
+    height:11rem;
+    border-bottom:1px dashed red;
+}
+.order-buttonwrap{
+    position: absolute;
+    right:1rem;
+    bottom: 0.5rem;
+}

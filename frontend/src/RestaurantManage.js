@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo, useState} from 'react'
+import React, { Suspense, useMemo} from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
 import OrderManage from './OrderManage'
 import FoodManage from './FoodManage'
@@ -12,7 +12,9 @@ import './css/resmanage.css'
 const { TabPane } = Tabs;    
 // fetcher用法 ,请求不要到数据应该怎么办
 export default withRouter(function RestaurantManage(props){
-   var [index,setIndex] = useState('1')
+    console.log(props)
+    var params = props.match.params
+    var rid = params.rid
 //从后端拿到餐厅信息
     // async function logout(){
     //     await api.get('/logout')
@@ -20,6 +22,7 @@ export default withRouter(function RestaurantManage(props){
     //     props.history.push('/')
     // }
     //这个请求只用请求一次
+    console.log(props)
     let RestaurantInfo = useMemo(() => {
         var userInfoFetcher = createFetcher(() => {
             return api.get('/userinfo')
@@ -32,18 +35,31 @@ export default withRouter(function RestaurantManage(props){
                 </div>
             )
         }
-    }, [])
+    }, [])   
+    // var userInfoFetcher = createFetcher(() => {
+    //         return api.get('/userinfo')
+    //     })    
+    // var info = userInfoFetcher.read() 
+    // var RestaurantInfo = null
+    // useEffect(() => {
+    //     RestaurantInfo =  function RestaurantInfo(){ 
+    //         return (
+    //             <div className='welcome'>
+    //                <h2 className='res-h2'><span className='res-span'>欢迎{info.data.title}登录</span> </h2> 
+    //             </div>
+    //         )
+    //     }
+    // },[])
     async function handleEvents(e){
-        setIndex(e)
         switch(e){
             case '1':
-                props.history.push('/manage/order')
+                props.history.push(`/restaurant/${rid}/manage/order`)
                 break;
             case '2' :
-                props.history.push('/manage/food')
+                props.history.push(`/restaurant/${rid}/manage/food`)
                 break
             case '3' : 
-                props.history.push('/manage/desk')
+                props.history.push(`/restaurant/${rid}/manage/desk`)
                 break
             case '4' : 
                 await api.get('/logout')
@@ -59,7 +75,7 @@ export default withRouter(function RestaurantManage(props){
             </Suspense>
             <nav className='res-nav'>
                 {/* 导航栏 */}
-                <Tabs defaultActiveKey={index} onChange={handleEvents}>
+                <Tabs  onChange={handleEvents}>
                      <TabPane tab="订单管理" key="1" >
                      </TabPane>
                      <TabPane tab="菜品管理" key="2" >
@@ -72,10 +88,10 @@ export default withRouter(function RestaurantManage(props){
             </nav>
             <main>
                 <Switch>
-                    <Route path='/manage/order' component={ OrderManage } ></Route>
-                    <Route path='/manage/food'  component={ FoodManage } ></Route>
-                    <Route path='/manage/desk'  component={ DeskManage } ></Route>
-                    <Route path='/manage/add-food'  component={ AddFood } ></Route>
+                    <Route path="/restaurant/:rid/manage/order" component={ OrderManage } ></Route>
+                    <Route path='/restaurant/:rid/manage/food'  component={ FoodManage } ></Route>
+                    <Route path='/restaurant/:rid/manage/desk'  component={ DeskManage } ></Route>
+                    <Route path='/restaurant/:rid/manage/add-food'  component={ AddFood } ></Route>
                 </Switch>
             </main>
         </div>

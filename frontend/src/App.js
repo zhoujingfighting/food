@@ -19,16 +19,18 @@ import RestaurantManage from './RestaurantManage'
 import Login from './Login'
 import HomePage from './HomePage'
 import Register from './Register'
+import Orderscuccess from './Ordersuccess'
 function App() {
   return (
     <HashRouter>
       <Switch>
         <Route path='/' exact component={HomePage}></Route>
         <Route path="/landing/r/:rid/d/:did" component={LandingPage}></Route>
-        <Route path="/r/:rid/d/:did" component={FoodCart}></Route>
-        <Route path="/manage" component = {RestaurantManage}></Route>
+        <Route path="/r/:rid/d/:did/c/:count" component={FoodCart}></Route>
+        <Route path="/restaurant/:rid/manage" component = {RestaurantManage}></Route>
         <Route path="/login" component = {Login}></Route>
         <Route path="/register" component = {Register}></Route>
+        <Route path = "/restaurant/:rid/desk/:did/order-success" component = {Orderscuccess}></Route>
       </Switch>
     </HashRouter>
   );

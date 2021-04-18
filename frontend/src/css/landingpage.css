@@ -1,0 +1,23 @@
+.restitle{
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1.5rem;
+}
+.foodpeople{
+    margin-top:5rem;
+    text-align: center;
+}
+
+.restitle li{
+    list-style: none;
+    display: inline-block;
+    width:3rem;
+    height:3rem;
+    border:1px solid red;
+    margin:1rem 1rem;
+    line-height: 3rem;
+    border-radius: 1rem;
+}
+.restitle li:hover{
+    color: red;
+}

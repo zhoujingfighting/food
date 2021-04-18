@@ -1,0 +1,12 @@
+.addfood-title{
+    width: 100vw;
+    /* background: violet; */
+    text-align: center;
+    border-bottom: 1px dashed gray;
+}
+.addfood_wrap{
+    padding:2rem 2rem;
+}
+.food_wrap{
+    margin:2rem 1rem;
+}

@@ -11,8 +11,8 @@ export default withRouter(function Login(props){
         var password = nameref.current.value
         try{
            var res =  await api.post('/login',{name,password})
-            console.log(res.status)
-            props.history.push('/manage') 
+           //要带状态
+            props.history.push(`/restaurant/${res.data.id}/manage`) 
         }catch(error){
                 alert('登录名或者密码错误')
         }

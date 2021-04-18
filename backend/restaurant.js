@@ -1,6 +1,72 @@
 
 const express = require('express')
 const dbPromise = require('./db')
+const multer = require('multer')
+//multer上传图片用
+const md5 = require('md5')
+const path = require('path')
+// const { io } = require('socket.io-client')
+// 
+var deskMap = new Map()
+ioServer.on('connection' , socket => {
+    // console.log('frefr')
+    console.log(socket.handshake.url)
+    socket.on('join desk', desk => {
+        socket.join( desk )
+        console.log( desk )
+        var cartFood = deskMap.get(desk)
+        if(!cartFood){
+            deskMap.set(desk,[])
+        }
+        socket.emit('cart food', cartFood || [])
+    }) 
+    //商户端joinio
+    socket.on('join restaurant',restaurant => {
+        socket.join( restaurant )
+    })
+    socket.on('new food', info => {
+        //相同的菜合并起来
+        var  foodArray = deskMap.get( info.desk )
+        console.log(foodArray)
+        //和foodcart中的一样 ,那边订完单3
+        var idx = foodArray.findIndex( it => it.food.id === info.food.id)
+            if(idx >= 0){
+                if(info.amount === 0){
+                    foodArray.splice(idx,1)
+                }else{
+                    foodArray[idx].amount = info.amount
+                }
+            }else{
+                foodArray.push({
+                   food:info.food ,
+                   amount:info.amount
+                })
+            }
+        ioServer.in(info.desk).emit('new food',info)
+        //这个是为了保证这个桌子上的每个客人都是一样的消息
+    })
+    //用户加入的桌子 
+/*
+2021/4/18
+未解决得问题 : 
+已经删除得订单这边菜品还是显示
+*/
+    // socket.on('new food',info => {
+    //     socket.emit('new food' , info)
+    // })
+})
+var storage = multer.diskStorage({
+    destination(req,file,cb){
+        cb(null,'./uploader/')
+    },
+    filename(req,file,cb){
+        cb(null , Date.now() + path.extname(file.originalname))//appding.jpg
+    }
+})
+const uploader = multer({
+    storage:storage
+})
+//上传图片用
 let db
 (async function(){
     db = await require('./db')
@@ -48,21 +114,29 @@ app.post('/restaurant/:rid/desk/:did/order' ,async (req,res,next) => {
     //用户下单
     var rid = req.params.rid
     var did = req.params.did 
-    var totalPrice  = req.body.totalPrice
-    var deskName = req.body.deskName
-    var customCount = req.body.customCount
+    var totalPrice  = req.body.totalprice
+    var deskName = req.body.deskname
+    var customCount = req.body.customcount
     var details = JSON.stringify(req.body.foods)
 
     var status = 'PENDING'//'confirmed' ''
     var timestamp = new Date().toISOString()
      await db.run(`
-        INSERT INTO orders (rid,did,deskName,customCount,details,status,timestamp)
-        VALUES(?,?,?,?,?,?,?)
-    `,rid,did,deskName,customCount,details,status,timestamp)
+        INSERT INTO orders (rid,did,deskName,totalprice,customCount,details,status,timestamp)
+        VALUES(?,?,?,?,?,?,?,?)
+    `,rid,did,deskName,totalPrice,customCount,details,status,timestamp)
     var order = await db.get('SELECT * FROM orders ORDER BY id DESC LIMIT 1')
     order.details = JSON.parse( order.details )
     //还得实时共享后台
-    res.json( order )
+     res.json( order)
+     console.log(order)
+    //  这里重启了服务器
+    var desk = 'desk:' + did 
+     deskMap.set( desk,[] )
+     //存在服务器内存中
+     ioServer.in(desk).emit('placeorder success',order)
+     //只想发给当前桌
+     ioServer.emit('new order' ,order)
 })
 
 //订单管理
@@ -76,7 +150,8 @@ app.route('/restaurant/:rid/order')
     })
 app.route('/restaurant/:rid/order/:oid')
     .delete( async (req,res,next) => {
-        var order = await db.run('SELECT FROM orders WHERE rid=? AND id=?' , req.cookies.userid,req.params.oid)
+        var order = await db.run('SELECT * FROM orders WHERE rid=? AND id=?' , req.cookies.userid,req.params.oid)
+        console.log(order)
         if(order){
             await db.run('DELETE FROM orders WHERE rid=? AND id=?' , req.cookies.userid,req.params.oid)
             delete  order.id
@@ -89,13 +164,22 @@ app.route('/restaurant/:rid/order/:oid')
             })
         }
     })
+//更改订单状态
+//POST:{status :'pending/confirmed/completed'}
+app.route('/restaurant/:rid/order/:oid/status')
+    .put(async(req,res,next) => {
+        await db.run(`
+        UPDATE orders SET status = ? WHERE id = ? and rid = ?
+        ` , req.body.status ,req.params.oid ,req.cookies.userid)
+        res.json(await db.get(`SELECT * FROM orders WHERE id=?`,req.params.oid))
+    })
 //菜品管理api
 app.route('/restaurant/food')
  .get(async (req,res,next) => {
     //获取所有菜品列表用于页面展示
     // {//rid     cookie里面获得
     //     name ,
-    //     img ,
+    //     img , 
     //     price,
     //     category,
     //     status : 'on'
@@ -108,11 +192,13 @@ app.route('/restaurant/food')
     // 拿到所有菜品
     res.json( foods )
 })
- .post(async (req,res,next) => {
-     //增加一个菜品DESC
+//input type='file' name='img
+ .post(uploader.single('img'),async (req,res,next) => {
+     //增加一个菜品DESC ,图片
+     console.log(req.file)
      await db.run(`
-        INSERT INTO foods (rid,name,price,desc,status,category) VALUES (?,?,?,?,?,?)
-    `,req.cookies.userid,req.body.name,req.body.price,req.body.desc,req.body.status,req.body.category)
+        INSERT INTO foods (rid,name,price,desc,status,category,img) VALUES (?,?,?,?,?,?,?)
+    `,req.cookies.userid,req.body.name,req.body.price,req.body.desc,req.body.status,req.body.category,req.file.filename)
     //最新插入的菜
     var food = await db.get('SELECT * FROM foods ORDER BY id DESC LIMIT 1')
     res.json( food )
@@ -133,17 +219,21 @@ app.route('/restaurant/food')
                 })
             }
     })
-    .put( async (req,res,next) => {
+    //也是需要修改图片的
+    .put(uploader.single('img'), async (req,res,next) => {
         //修改菜品
         console.log(req.params)
         var fid = req.params.fid
         var userid = req.cookies.userid
         var food = await db.get('SELECT * FROM foods WHERE id = ? AND rid=?',req.params.fid,req.cookies.userid)
+
+        console.log(req.file)
+        //合并上来
         if(food){
             await db.run(`
-                UPDATE foods SET name=?,price=?,status=?,desc=?,category=?
+                UPDATE foods SET name=?,price=?,status=?,desc=?,category=?,img=?
                 WHERE id =? AND rid =?
-                `,req.body.name,req.body.price,req.body.status,req.body.desc,req.body.category,
+                `,req.body.name,req.body.price,req.body.status,req.body.desc,req.body.category,req.file.filename,
                 fid,userid
                 )
             var food = await db.get('SELECT * FROM foods WHERE id = ? AND rid=?',req.params.fid,req.cookies.userid)
@@ -220,7 +310,5 @@ app.route('/restaurant/:rid/desk/:did')//desk id
            }
            
        })
-
-
-    module.exports = app
+module.exports = app
     //导出中间件
