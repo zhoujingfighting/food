@@ -1,4 +1,10 @@
 项目思维导图连接地址 : 链接：https://gitmind.cn/app/doc/2071528469  密码：1618
+### 项目运行
+- 如果路由跳转出现BUG,应该是写完项目有些默认路由跳转没有更新,直接修改对应路由就好
+- cd backend , 然后运行npm install安装依赖 , nodemon app.js开启后端服务器 , 有可能会有报错 , 提示数据库没有totalprice字段 , 可以自行更新字段(interger类型) ,其他bug暂时没有发现.数据库用的sqlite
+- cd frontend , 然后运行npm install安装依赖 , npm run start运行React app
+	- 默认页面是餐厅管理员登陆页面 , 先注册在登陆 , 登录之后可以自行管理菜品
+	- 顾客登陆页面在http://localhost:3000/#/landing/r/1/d/1,这个可以自行修改,前提是有这个resraurant
 
 ### 需求分析
 
